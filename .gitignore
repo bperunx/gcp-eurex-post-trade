@@ -1,0 +1,54 @@
+# Licensed market data never goes into the repository
+data/raw/
+*.dbn
+*.dbn.zst
+*.parquet
+*.csv.gz
+
+# Secrets and local config
+.env
+*.key
+*.pem
+credentials*.json
+service-account*.json
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Java
+target/
+build/
+*.class
+.gradle/
+
+# Go
+bin/
+*.test
+*.out
+
+# Rust
+**/target/
+
+# Solidity / Foundry
+out/
+cache/
+broadcast/
+node_modules/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
