@@ -37,7 +37,7 @@ The hot path of an exchange contains **no database**. Matching and risk run in m
 
 ## Open question
 
-Hot path for `position-keeping`: keep position and margin state in Dataflow (Java, stateful processing), or build an in-memory engine (for example Rust on GKE) following the Deutsche Börse pattern, with Spanner as system of record only?
+Hot path for `02_position-keeping`: keep position and margin state in Dataflow (Java, stateful processing), or build an in-memory engine (for example Rust on GKE) following the Deutsche Börse pattern, with Spanner as system of record only?
 
 ## Sources
 

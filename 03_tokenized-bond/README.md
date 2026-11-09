@@ -15,7 +15,7 @@ The lifecycle of a tokenized bond in a regulated market infrastructure: issuance
 - **Lifecycle events:** coupon payment, redemption at maturity, one corporate action.
 - **Operator controls:** freeze and forced transfer, as a regulated FMI operator needs them.
 - **Custody:** key management in Cloud KMS / Cloud HSM.
-- **Integration:** Python service streaming chain events through Pub/Sub into `position-keeping`, reconciled against the classic holdings ledger after chain finality.
+- **Integration:** Python service streaming chain events through Pub/Sub into `02_position-keeping`, reconciled against the classic holdings ledger after chain finality.
 - **Tests:** contract tests with Foundry.
 - **Design note:** how the same solution would look on Google Cloud Universal Ledger.
 

@@ -1,6 +1,6 @@
 # Low-latency playbook
 
-Techniques for latency-sensitive trading workloads on Google Cloud, collected from public benchmarks and reference designs. This page decides what the `position-keeping` hot path and its latency benchmark use, and in which order.
+Techniques for latency-sensitive trading workloads on Google Cloud, collected from public benchmarks and reference designs. This page decides what the `02_position-keeping` hot path and its latency benchmark use, and in which order.
 
 *As of November 2026. Figures are quoted from the linked sources, not measured here.*
 
@@ -81,7 +81,7 @@ Each step is one benchmark run, so the gain of every technique is visible on its
 
 ## Where the cloud ends
 
-Google's Ultra Low Latency Solution (U4 machine family) shows what a production exchange needs beyond general-purpose cloud: bare metal instances, dedicated ULL networks in A and B pairs, multicast, PTP time, kernel bypass with Onload or DPDK. It is available only to approved exchange operators and their participants and only in `us-south1`, so this repository cannot use it. It serves as the reference for the cloud and co-location boundary note in `position-keeping`.
+Google's Ultra Low Latency Solution (U4 machine family) shows what a production exchange needs beyond general-purpose cloud: bare metal instances, dedicated ULL networks in A and B pairs, multicast, PTP time, kernel bypass with Onload or DPDK. It is available only to approved exchange operators and their participants and only in `us-south1`, so this repository cannot use it. It serves as the reference for the cloud and co-location boundary note in `02_position-keeping`.
 
 ## Sources
 

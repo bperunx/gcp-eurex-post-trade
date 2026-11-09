@@ -14,7 +14,7 @@ Scalable real-time position keeping and intraday risk for a clearing house, acro
 - **Hybrid instruments:** one position book for instruments held on-chain, off-chain or both at once. An account's position is the consolidated sum of its tokenized and classic holdings; tokenization and detokenization arrive as paired events (mint and lock, burn and release) and are never counted twice or lost. Chain finality is respected: on-chain movements count only after confirmation and are reversed on a reorg.
 - **Replay and reproducibility:** full replay of a stress day without lost or duplicated events, exact reconstruction of any historical position, end-of-day reconciliation against an independent batch run, cost per trading day.
 - **DORA:** multi-zone operation in Frankfurt, zone failure injected during replay, automated incident classification with a draft report, documented exit strategy.
-- **Positions API:** Go service on Cloud Run, implementing the contract from `data-foundation`.
+- **Positions API:** Go service on Cloud Run, implementing the contract from `01_data-foundation`.
 - **Latency benchmark:** hot path and market data fan-out measured in the cloud with compact placement; p50, p99 and p99.9 published together with the limits. The run follows the benchmark ladder in the [low-latency playbook](../docs/low-latency-playbook.md): compact placement, core pinning, kernel bypass, bare metal.
 - **Cloud and co-location boundary:** a short design note on what belongs in the cloud (risk, post-trade, data, digital assets) and what stays in co-location (order matching of latency-critical markets).
 

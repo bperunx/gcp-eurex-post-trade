@@ -14,11 +14,11 @@ This repository shows what that can look like on Google Cloud across the whole t
 
 | Component | What it shows | Key services | Status |
 | --- | --- | --- | --- |
-| [`data-foundation`](data-foundation/) | Reference data golden record, market data products, data sharing without copies, contract-first APIs | Pub/Sub, BigLake, BigQuery, Bigtable, Analytics Hub, Apigee | Planned |
-| [`position-keeping`](position-keeping/) | Scalable real-time positions across tokenized, detokenized and hybrid instruments, low-latency in-memory hot path, intraday risk and margin for futures and options, tokenized collateral, DORA resilience | Rust (in-memory), Pub/Sub, Dataflow, Spanner, BigQuery | PRD drafted |
-| [`tokenized-bond`](tokenized-bond/) | Issuance, tokenization and detokenization, DvP settlement, custody and lifecycle events of a hybrid bond | Solidity (testnet), Cloud KMS / Cloud HSM, Pub/Sub | Planned |
-| [`market-surveillance`](market-surveillance/) | Spoofing detection on the order book with explainable alerts and an investigation agent | Vertex AI, Gemini, Agent Development Kit, BigQuery | Planned |
-| [`platform`](platform/) | Landing zone, security baseline, CI/CD templates shared by all components | Terraform, VPC Service Controls, CMEK, Cloud Deploy | Scaffolded |
+| [`01_data-foundation`](01_data-foundation/) | Reference data golden record, market data products, data sharing without copies, contract-first APIs | Pub/Sub, BigLake, BigQuery, Bigtable, Analytics Hub, Apigee | Planned |
+| [`02_position-keeping`](02_position-keeping/) | Scalable real-time positions across tokenized, detokenized and hybrid instruments, low-latency in-memory hot path, intraday risk and margin for futures and options, tokenized collateral, DORA resilience | Rust (in-memory), Pub/Sub, Dataflow, Spanner, BigQuery | PRD drafted |
+| [`03_tokenized-bond`](03_tokenized-bond/) | Issuance, tokenization and detokenization, DvP settlement, custody and lifecycle events of a hybrid bond | Solidity (testnet), Cloud KMS / Cloud HSM, Pub/Sub | Planned |
+| [`04_market-surveillance`](04_market-surveillance/) | Spoofing detection on the order book with explainable alerts and an investigation agent | Vertex AI, Gemini, Agent Development Kit, BigQuery | Planned |
+| [`05_platform`](05_platform/) | Landing zone, security baseline, CI/CD templates shared by all components | Terraform, VPC Service Controls, CMEK, Cloud Deploy | Scaffolded |
 
 ## Architecture
 
@@ -58,12 +58,12 @@ flowchart LR
 
 | Stage | Where it is shown |
 | --- | --- |
-| Issuance | `tokenized-bond`: issuance via smart contract, investor whitelist |
-| Trading | `data-foundation`: market data replay; `position-keeping`: low-latency pre-trade risk check; `market-surveillance`: order book surveillance |
-| Clearing | `position-keeping`: CCP view, margin calls, futures and options margin |
-| Settlement | `tokenized-bond`: delivery versus payment; `position-keeping`: daily cash settlement of variation margin |
-| Custody | `tokenized-bond`: custody with keys in Cloud KMS / Cloud HSM, coupon and redemption, tokenization and detokenization against the classic register |
-| Reference and market data | `data-foundation`: golden record (ISIN, LEI, CFI, FIGI), market data products, data sharing |
+| Issuance | `03_tokenized-bond`: issuance via smart contract, investor whitelist |
+| Trading | `01_data-foundation`: market data replay; `02_position-keeping`: low-latency pre-trade risk check; `04_market-surveillance`: order book surveillance |
+| Clearing | `02_position-keeping`: CCP view, margin calls, futures and options margin |
+| Settlement | `03_tokenized-bond`: delivery versus payment; `02_position-keeping`: daily cash settlement of variation margin |
+| Custody | `03_tokenized-bond`: custody with keys in Cloud KMS / Cloud HSM, coupon and redemption, tokenization and detokenization against the classic register |
+| Reference and market data | `01_data-foundation`: golden record (ISIN, LEI, CFI, FIGI), market data products, data sharing |
 
 ## Engineering principles
 
@@ -89,18 +89,18 @@ Market data comes from licensed historical Eurex data and is **not** part of thi
 
 ```
 gcp-fmi-eurex-platform/
-├── data-foundation/       # reference and market data, data products, APIs
-├── position-keeping/      # real-time positions, hot path, risk, margin, DORA
-├── tokenized-bond/        # hybrid issuance, DvP, custody, lifecycle events
-├── market-surveillance/   # spoofing detection, explainable alerts, agent
-├── platform/              # Terraform, security baseline, CI/CD templates
-└── docs/                  # PRDs, architecture decisions, engineering standards
+├── 01_data-foundation/       # reference and market data, data products, APIs
+├── 02_position-keeping/      # real-time positions, hot path, risk, margin, DORA
+├── 03_tokenized-bond/        # hybrid issuance, DvP, custody, lifecycle events
+├── 04_market-surveillance/   # spoofing detection, explainable alerts, agent
+├── 05_platform/              # Terraform, security baseline, CI/CD templates
+└── docs/                     # PRDs, architecture decisions, engineering standards
 ```
 
 ## Roadmap
 
-- [ ] `data-foundation` and `position-keeping` MVP: December 2026
-- [ ] `tokenized-bond` and `market-surveillance` MVP: January 2027
+- [ ] `01_data-foundation` and `02_position-keeping` MVP: December 2026
+- [ ] `03_tokenized-bond` and `04_market-surveillance` MVP: January 2027
 - [ ] Data foundation extensions and security hardening: February–March 2027
 
 ## License
