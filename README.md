@@ -1,4 +1,4 @@
-# GCP FMI Reference Platform
+# GCP FMI Eurex Platform
 
 A reference platform for **Financial Market Infrastructures (FMIs)** on Google Cloud: scalable real-time position keeping with a low-latency hot path, the lifecycle of a tokenized and hybrid bond, and explainable market surveillance, built on one shared data foundation.
 
@@ -88,7 +88,7 @@ Market data comes from licensed historical Eurex data and is **not** part of thi
 ## Repository layout
 
 ```
-gcp-fmi-reference-platform/
+gcp-fmi-eurex-platform/
 ├── data-foundation/       # reference and market data, data products, APIs
 ├── position-keeping/      # real-time positions, hot path, risk, margin, DORA
 ├── tokenized-bond/        # hybrid issuance, DvP, custody, lifecycle events
