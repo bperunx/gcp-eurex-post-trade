@@ -1,6 +1,6 @@
 # GCP FMI Reference Platform
 
-A reference platform for **Financial Market Infrastructures (FMIs)** on Google Cloud: real-time position keeping, the lifecycle of a tokenized bond, and explainable market surveillance, built on one shared data foundation.
+A reference platform for **Financial Market Infrastructures (FMIs)** on Google Cloud: scalable real-time position keeping with a low-latency hot path, the lifecycle of a tokenized and hybrid bond, and explainable market surveillance, built on one shared data foundation.
 
 > **Status: in progress.** Independent reference implementation, not affiliated with Google, Eurex or Deutsche Börse. Clearing members and accounts are fictitious, smart contracts run on a testnet only, and nothing here is meant for production use.
 
@@ -15,8 +15,8 @@ This repository shows what that can look like on Google Cloud across the whole t
 | Component | What it shows | Key services | Status |
 | --- | --- | --- | --- |
 | [`data-foundation`](data-foundation/) | Reference data golden record, market data products, data sharing without copies, contract-first APIs | Pub/Sub, BigLake, BigQuery, Bigtable, Analytics Hub, Apigee | Planned |
-| [`position-keeping`](position-keeping/) | Real-time positions, intraday risk and margin for futures and options, tokenized collateral, DORA resilience | Pub/Sub, Dataflow, Spanner, BigQuery | PRD drafted |
-| [`tokenized-bond`](tokenized-bond/) | Issuance, DvP settlement, custody and lifecycle events of a tokenized bond | Solidity (testnet), Cloud KMS / Cloud HSM, Pub/Sub | Planned |
+| [`position-keeping`](position-keeping/) | Scalable real-time positions across tokenized, detokenized and hybrid instruments, low-latency in-memory hot path, intraday risk and margin for futures and options, tokenized collateral, DORA resilience | Rust (in-memory), Pub/Sub, Dataflow, Spanner, BigQuery | PRD drafted |
+| [`tokenized-bond`](tokenized-bond/) | Issuance, tokenization and detokenization, DvP settlement, custody and lifecycle events of a hybrid bond | Solidity (testnet), Cloud KMS / Cloud HSM, Pub/Sub | Planned |
 | [`market-surveillance`](market-surveillance/) | Spoofing detection on the order book with explainable alerts and an investigation agent | Vertex AI, Gemini, Agent Development Kit, BigQuery | Planned |
 | [`platform`](platform/) | Landing zone, security baseline, CI/CD templates shared by all components | Terraform, VPC Service Controls, CMEK, Cloud Deploy | Scaffolded |
 
@@ -27,7 +27,10 @@ flowchart LR
     MD["Historical Eurex market data<br/>(licensed, replayed)"] --> ING["Ingestion and replay<br/>(Rust)"]
     ING --> PS[("Pub/Sub")]
     CHAIN["Testnet chain<br/>tokenized bond"] --> INT["Chain integration<br/>(Python)"]
+    LEDGER["Classic holdings ledger<br/>(CSD stand-in)"] --> INT
     INT --> PS
+    ING --> HOT["Hot path: in-memory risk<br/>(Rust, FIFO, event-sourced)"]
+    HOT --> PS
 
     subgraph DF["data-foundation"]
         RD["Reference data<br/>golden record"]
@@ -56,17 +59,18 @@ flowchart LR
 | Stage | Where it is shown |
 | --- | --- |
 | Issuance | `tokenized-bond`: issuance via smart contract, investor whitelist |
-| Trading | `data-foundation`: market data replay; `market-surveillance`: order book surveillance |
+| Trading | `data-foundation`: market data replay; `position-keeping`: low-latency pre-trade risk check; `market-surveillance`: order book surveillance |
 | Clearing | `position-keeping`: CCP view, margin calls, futures and options margin |
 | Settlement | `tokenized-bond`: delivery versus payment; `position-keeping`: daily cash settlement of variation margin |
-| Custody | `tokenized-bond`: custody with keys in Cloud KMS / Cloud HSM, coupon and redemption |
+| Custody | `tokenized-bond`: custody with keys in Cloud KMS / Cloud HSM, coupon and redemption, tokenization and detokenization against the classic register |
 | Reference and market data | `data-foundation`: golden record (ISIN, LEI, CFI, FIGI), market data products, data sharing |
 
 ## Engineering principles
 
 - **Trunk-based development:** short-lived branches, CI on every push, blue/green deployments.
-- **Polyglot by purpose:** Python for agents, analytics and integration; Java for Dataflow (Apache Beam); Go for APIs; Rust for market data ingestion; Solidity for smart contracts.
+- **Polyglot by purpose:** Python for agents, analytics and integration; Java for Dataflow (Apache Beam); Go for APIs; Rust for market data ingestion and the low-latency hot path; Solidity for smart contracts.
 - **Contract-first:** OpenAPI contracts with contract tests, published through Apigee.
+- **No database in the hot path:** latency-critical state lives in memory; databases hold the authoritative record and are updated asynchronously.
 - **Event-sourced positions:** an immutable event log, idempotent consumers, reproducible historical states.
 - **Secure by default:** EU region `europe-west3` (Frankfurt), customer-managed encryption keys, VPC Service Controls, least-privilege IAM.
 - **Built to hand over:** every component ships with a PRD, an architecture diagram and a hand-off guide.
@@ -86,8 +90,8 @@ Market data comes from licensed historical Eurex data and is **not** part of thi
 ```
 gcp-fmi-reference-platform/
 ├── data-foundation/       # reference and market data, data products, APIs
-├── position-keeping/      # real-time positions, risk, margin, DORA
-├── tokenized-bond/        # issuance, DvP, custody, lifecycle events
+├── position-keeping/      # real-time positions, hot path, risk, margin, DORA
+├── tokenized-bond/        # hybrid issuance, DvP, custody, lifecycle events
 ├── market-surveillance/   # spoofing detection, explainable alerts, agent
 ├── platform/              # Terraform, security baseline, CI/CD templates
 └── docs/                  # PRDs, architecture decisions, engineering standards
