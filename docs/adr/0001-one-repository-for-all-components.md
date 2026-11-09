@@ -8,7 +8,7 @@ The platform has four components (data foundation, position keeping, tokenized b
 
 ## Decision
 
-Keep all components in one repository, with one top-level folder per component and a shared `05_platform/` folder.
+Keep all components in one repository, with one top-level folder per component and a shared `00_platform/` folder.
 
 ## Consequences
 

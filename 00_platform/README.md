@@ -14,14 +14,14 @@ Shared infrastructure, security baseline and CI/CD templates for all components.
 ## Layout
 
 ```
-05_platform/
+00_platform/
 └── terraform/     # provider setup and shared variables; resources follow per component
 ```
 
 ## Usage
 
 ```bash
-cd 05_platform/terraform
+cd 00_platform/terraform
 terraform init -backend=false
 terraform validate
 ```

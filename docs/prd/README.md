@@ -8,3 +8,4 @@ One PRD per component. Each PRD covers the problem, users, critical user journey
 | `01_data-foundation` | to follow | Planned |
 | `03_tokenized-bond` | to follow | Planned |
 | `04_market-surveillance` | to follow | Planned |
+| `05_low-latency` | to follow | Planned |
