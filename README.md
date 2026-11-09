@@ -75,7 +75,7 @@ flowchart LR
 - **Secure by default:** EU region `europe-west3` (Frankfurt), customer-managed encryption keys, VPC Service Controls, least-privilege IAM.
 - **Built to hand over:** every component ships with a PRD, an architecture diagram and a hand-off guide.
 
-Details: [docs/engineering-standards.md](docs/engineering-standards.md), the [architecture decision records](docs/adr/) and the [industry insights](docs/industry-insights.md) that keep each component close to how exchanges, CCPs and CSDs actually build.
+Details: [docs/engineering-standards.md](docs/engineering-standards.md), the [architecture decision records](docs/adr/) the [low-latency playbook](docs/low-latency-playbook.md) and the [industry insights](docs/industry-insights.md) that keep each component close to how exchanges, CCPs and CSDs actually build.
 
 ## Regulatory context
 
