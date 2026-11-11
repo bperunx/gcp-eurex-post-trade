@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../../../../../schemas/firewall-rules.schema.json
+
+ingress:
+  ingress-default-prod-deny:
+    description: "Deny and log unmatched ingress traffic."
+    deny: true
+    priority: 65535
+    enable_logging:
+      include_metadata: false

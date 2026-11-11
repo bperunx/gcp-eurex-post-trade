@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=../../../../schemas/org-policies.schema.json
+
+# Enforces ADR 0002: all regional resources stay in europe-west3 (Frankfurt)
+gcp.resourceLocations:
+  rules:
+    - allow:
+        values:
+          - "in:europe-west3-locations"

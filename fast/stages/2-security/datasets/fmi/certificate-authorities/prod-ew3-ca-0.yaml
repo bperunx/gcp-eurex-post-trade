@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../../schemas/certificate-authority.schema.json
+
+# Internal CA pool in Frankfurt for service-to-service mTLS (ADR 0002)
+location: $locations:primary
+project_id: $project_ids:prod-sec-core-0
+ca_pool_config:
+  create_pool: {}
+ca_configs:
+  prod-mtls-ca-0:
+    subject:
+      common_name: fmi-prod-internal-ca
+      organization: FMI Reference Platform

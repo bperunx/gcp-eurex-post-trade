@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=../../schemas/defaults.schema.json
+
+output_files:
+  local_path: ~/fast-config/fmi-eurex
+  storage_bucket: $storage_buckets:iac-0/iac-outputs

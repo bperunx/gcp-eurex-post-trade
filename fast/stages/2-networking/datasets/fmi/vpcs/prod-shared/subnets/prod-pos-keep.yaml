@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../../../schemas/subnet.schema.json
+
+name: prod-pos-keep
+region: $locations:primary
+ip_cidr_range: 10.64.4.0/22
+description: Frankfurt subnet for position-keeping Dataflow and Cloud Run (prod)

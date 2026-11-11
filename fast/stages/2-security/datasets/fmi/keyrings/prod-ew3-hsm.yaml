@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../schemas/keyring.schema.json
+
+# Cloud HSM keyring in Frankfurt for tokenized-bond custody signing & HSM-backed keys (ADR 0002)
+location: $locations:primary
+project_id: $project_ids:prod-sec-core-0
+keys:
+  custody-secp256k1:
+    purpose: ASYMMETRIC_SIGN
+    version_template:
+      algorithm: EC_SIGN_SECP256K1_SHA256
+      protection_level: HSM
+  custody-envelope:
+    purpose: ENCRYPT_DECRYPT
+    rotation_period: 7776000s
+    version_template:
+      algorithm: GOOGLE_SYMMETRIC_ENCRYPTION
+      protection_level: HSM

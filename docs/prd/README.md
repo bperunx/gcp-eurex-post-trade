@@ -4,8 +4,8 @@ One PRD per component. Each PRD covers the problem, users, critical user journey
 
 | Component | PRD | Status |
 | --- | --- | --- |
-| `02_position-keeping` | to follow | Drafted, English version in progress |
-| `01_data-foundation` | to follow | Planned |
-| `03_tokenized-bond` | to follow | Planned |
-| `04_market-surveillance` | to follow | Planned |
-| `05_low-latency` | to follow | Planned |
+| `components/position-keeping` | to follow | Drafted, English version in progress |
+| `components/data-foundation` | to follow | Planned |
+| `components/tokenized-bond` | to follow | Planned |
+| `components/market-surveillance` | to follow | Planned |
+| `components/low-latency` | to follow | Planned |

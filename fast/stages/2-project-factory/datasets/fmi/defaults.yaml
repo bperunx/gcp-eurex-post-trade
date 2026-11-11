@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=../../schemas/defaults.schema.json
+
+projects:
+  defaults:
+    locations:
+      bigquery: $locations:primary
+      logging: $locations:primary
+      storage: $locations:primary
+  merges:
+    services:
+      - logging.googleapis.com
+      - monitoring.googleapis.com
+  overrides:
+    vpc_sc:
+      perimeter_name: $vpc_sc_perimeters:default
+      is_dry_run: true
+
+context:
+  locations:
+    primary: europe-west3
+
+output_files:
+  local_path: ~/fast-config/fmi-eurex-projects
+  storage_bucket: $storage_buckets:iac-0/iac-shared-outputs
+  providers_pattern:
+    service_accounts_match:
+      ro: automation/ro
+      rw: automation/rw
+    storage_bucket: $storage_buckets:iac-0/iac-shared-state

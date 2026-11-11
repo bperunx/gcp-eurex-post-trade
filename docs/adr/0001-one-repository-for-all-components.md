@@ -1,6 +1,6 @@
 # ADR 0001: One repository for all components
 
-**Status:** accepted · **Date:** 2026-11-07
+**Status:** accepted (folder layout refined by [ADR 0003](0003-fast-landing-zone-and-component-layout.md)) · **Date:** 2026-11-07
 
 ## Context
 

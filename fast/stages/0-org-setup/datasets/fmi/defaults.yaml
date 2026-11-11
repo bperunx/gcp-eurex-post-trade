@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../schemas/defaults.schema.json
+
+global:
+  billing_account: 0185E1-937C71-0421E5
+  organization:
+    domain: perunx.io
+    id: 149750641473
+
+projects:
+  defaults:
+    # Unique prefix (max 9 chars) for all FAST-managed projects
+    prefix: fmi0
+    locations:
+      bigquery: $locations:primary
+      logging: $locations:primary
+      storage: $locations:primary
+
+context:
+  email_addresses:
+    gcp-organization-admins: info@perunx.io
+  iam_principals:
+    # Domainless organization ("info-org") uses the admin user directly;
+    # switch to group:... once Cloud Identity / Google Workspace is linked.
+    gcp-organization-admins: user:info@perunx.io
+  locations:
+    primary: europe-west3
+
+output_files:
+  local_path: ~/fast-config/fmi-eurex
+  storage_bucket: $storage_buckets:iac-0/iac-outputs
+  providers:
+    0-org-setup:
+      bucket: $storage_buckets:iac-0/iac-org-state
+      service_account: $iam_principals:service_accounts/iac-0/iac-org-rw
+    0-org-setup-ro:
+      bucket: $storage_buckets:iac-0/iac-org-state
+      service_account: $iam_principals:service_accounts/iac-0/iac-org-ro
+    1-vpcsc:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 1-vpcsc
+      service_account: $iam_principals:service_accounts/iac-0/iac-vpcsc-rw
+    1-vpcsc-ro:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 1-vpcsc
+      service_account: $iam_principals:service_accounts/iac-0/iac-vpcsc-ro
+    2-networking:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-networking
+      service_account: $iam_principals:service_accounts/iac-0/iac-networking-rw
+    2-networking-ro:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-networking
+      service_account: $iam_principals:service_accounts/iac-0/iac-networking-ro
+    2-security:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-security
+      service_account: $iam_principals:service_accounts/iac-0/iac-security-rw
+    2-security-ro:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-security
+      service_account: $iam_principals:service_accounts/iac-0/iac-security-ro
+    2-project-factory:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-project-factory
+      service_account: $iam_principals:service_accounts/iac-0/iac-pf-rw
+    2-project-factory-ro:
+      bucket: $storage_buckets:iac-0/iac-stage-state
+      prefix: 2-project-factory
+      service_account: $iam_principals:service_accounts/iac-0/iac-pf-ro

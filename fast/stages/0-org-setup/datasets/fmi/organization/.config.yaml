@@ -1,0 +1,128 @@
+# yaml-language-server: $schema=../../../schemas/organization.schema.json
+
+id: $defaults:organization/id
+contacts:
+  $email_addresses:gcp-organization-admins:
+    - ALL
+
+iam_bindings:
+  pf_org_policy_admin:
+    role: roles/orgpolicy.policyAdmin
+    members:
+      - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    condition:
+      expression: resource.matchTag('${organization.id}/context', 'project-factory')
+      title: Project factory org policy admin
+  pf_org_policy_viewer:
+    role: roles/orgpolicy.policyViewer
+    members:
+      - $iam_principals:service_accounts/iac-0/iac-pf-ro
+    condition:
+      expression: resource.matchTag('${organization.id}/context', 'project-factory')
+      title: Project factory org policy viewer
+
+iam_by_principals:
+  $iam_principals:gcp-organization-admins:
+    - roles/billing.admin
+    - roles/cloudasset.owner
+    - roles/cloudsupport.admin
+    - roles/compute.osAdminLogin
+    - roles/compute.xpnAdmin
+    - roles/iam.organizationRoleAdmin
+    - roles/iam.workforcePoolAdmin
+    - roles/logging.admin
+    - roles/orgpolicy.policyAdmin
+    - roles/owner
+    - roles/resourcemanager.folderAdmin
+    - roles/resourcemanager.organizationAdmin
+    - roles/resourcemanager.projectCreator
+    - roles/resourcemanager.projectMover
+    - roles/resourcemanager.tagAdmin
+    - roles/serviceusage.serviceUsageAdmin
+  $iam_principals:service_accounts/iac-0/iac-org-rw:
+    - roles/accesscontextmanager.policyAdmin
+    - roles/cloudasset.viewer
+    - roles/essentialcontacts.admin
+    - roles/iam.organizationRoleAdmin
+    - roles/iam.workforcePoolAdmin
+    - roles/logging.admin
+    - roles/orgpolicy.policyAdmin
+    - roles/resourcemanager.folderAdmin
+    - roles/resourcemanager.organizationAdmin
+    - roles/resourcemanager.projectCreator
+    - roles/resourcemanager.projectMover
+    - roles/resourcemanager.tagAdmin
+    - roles/resourcemanager.tagUser
+  $iam_principals:service_accounts/iac-0/iac-org-ro:
+    - roles/cloudasset.viewer
+    - roles/essentialcontacts.viewer
+    - roles/iam.organizationRoleViewer
+    - roles/iam.workforcePoolViewer
+    - roles/logging.viewer
+    - roles/orgpolicy.policyViewer
+    - roles/resourcemanager.folderViewer
+    - roles/resourcemanager.tagViewer
+    - roles/serviceusage.serviceUsageViewer
+    - $custom_roles:organization_admin_viewer
+    - $custom_roles:tag_viewer
+  $iam_principals:service_accounts/iac-0/iac-networking-rw:
+    - roles/accesscontextmanager.policyEditor
+    - roles/compute.orgFirewallPolicyAdmin
+    - roles/compute.orgSecurityPolicyAdmin
+    - roles/compute.orgSecurityResourceAdmin
+    - roles/compute.xpnAdmin
+  $iam_principals:service_accounts/iac-0/iac-networking-ro:
+    - roles/accesscontextmanager.policyReader
+    - roles/compute.orgFirewallPolicyUser
+    - roles/compute.viewer
+  $iam_principals:service_accounts/iac-0/iac-pf-rw:
+    - roles/accesscontextmanager.policyEditor
+  $iam_principals:service_accounts/iac-0/iac-pf-ro:
+    - roles/accesscontextmanager.policyReader
+  $iam_principals:service_accounts/iac-0/iac-security-rw:
+    - roles/accesscontextmanager.policyEditor
+    - roles/cloudasset.viewer
+    - roles/compute.orgSecurityPolicyAdmin
+    - roles/compute.orgSecurityResourceAdmin
+  $iam_principals:service_accounts/iac-0/iac-security-ro:
+    - roles/accesscontextmanager.policyReader
+    - roles/cloudasset.viewer
+    - $custom_roles:org_security_policy_viewer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-rw:
+    - roles/accesscontextmanager.policyAdmin
+    - roles/cloudasset.viewer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-ro:
+    - roles/accesscontextmanager.policyReader
+    - roles/cloudasset.viewer
+
+data_access_logs:
+  sts.googleapis.com:
+    ADMIN_READ: {}
+  cloudkms.googleapis.com:
+    ADMIN_READ: {}
+    DATA_READ: {}
+    DATA_WRITE: {}
+
+logging:
+  storage_location: $locations:primary
+  sinks:
+    audit-logs:
+      destination: $log_buckets:log-0/audit-logs
+      filter: |
+        log_id("cloudaudit.googleapis.com/activity") OR
+        log_id("cloudaudit.googleapis.com/system_event") OR
+        log_id("cloudaudit.googleapis.com/policy") OR
+        log_id("cloudaudit.googleapis.com/access_transparency")
+    iam:
+      destination: $log_buckets:log-0/iam
+      filter: |
+        protoPayload.serviceName="iamcredentials.googleapis.com" OR
+        protoPayload.serviceName="iam.googleapis.com" OR
+        protoPayload.serviceName="sts.googleapis.com"
+    vpc-sc:
+      destination: $log_buckets:log-0/vpc-sc
+      filter: |
+        protoPayload.metadata.@type="type.googleapis.com/google.cloud.audit.VpcServiceControlAuditMetadata"
+
+iam:
+  roles/billing.creator: []

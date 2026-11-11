@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../../schemas/project.schema.json
+
+# Add dev-sec-core-0.yaml alongside this file when introducing a dev environment.
+parent: $folder_ids:security/prod
+services:
+  - certificatemanager.googleapis.com
+  - cloudkms.googleapis.com
+  - logging.googleapis.com
+  - monitoring.googleapis.com
+  - privateca.googleapis.com
+  - secretmanager.googleapis.com
+labels:
+  environment: production
+iam_bindings:
+  key_delegated:
+    members:
+      - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    role: roles/cloudkms.admin
+    condition:
+      title: Delegated IAM grant on CMEK keys for Project Factory
+      expression: |
+        api.getAttribute(
+          'iam.googleapis.com/modifiedGrantsByRole', []
+        ).hasOnly(['roles/cloudkms.cryptoKeyEncrypterDecrypter'])

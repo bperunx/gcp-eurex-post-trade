@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../../../schemas/folder.schema.json
+
+name: Components
+iam_by_principals:
+  $iam_principals:service_accounts/iac-0/iac-pf-rw:
+    - roles/owner
+    - roles/resourcemanager.folderAdmin
+    - roles/resourcemanager.projectCreator
+    - roles/resourcemanager.tagUser
+    - $custom_roles:service_project_network_admin
+  $iam_principals:service_accounts/iac-0/iac-pf-ro:
+    - roles/viewer
+    - roles/resourcemanager.folderViewer
+    - roles/resourcemanager.tagViewer
+tag_bindings:
+  context: $tag_values:context/project-factory

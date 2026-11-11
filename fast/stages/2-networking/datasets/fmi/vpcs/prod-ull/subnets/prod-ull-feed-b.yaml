@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../../../schemas/subnet.schema.json
+
+name: prod-ull-feed-b
+region: $locations:primary
+ip_cidr_range: 10.65.1.0/24
+description: Dedicated Feed-B subnet for UDP market data arbitration (prod)

@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=../../../schemas/firewall-policy.schema.json
+
+parent_id: $folder_ids:networking
+attachments:
+  networking: $folder_ids:networking
+name: fmi-network-policy
+ingress_rules:
+  allow-healthchecks:
+    description: Enable GCP load balancer healthchecks
+    priority: 1001
+    match:
+      source_ranges:
+        - $cidr_ranges_sets:healthchecks
+      layer4_configs:
+        - protocol: tcp
+          ports: ["80", "443", "8080"]
+  allow-ssh-from-iap:
+    description: Enable SSH administration strictly via Identity-Aware Proxy
+    priority: 1002
+    enable_logging: true
+    match:
+      source_ranges:
+        - $cidr_ranges_sets:iap
+      layer4_configs:
+        - protocol: tcp
+          ports: ["22"]

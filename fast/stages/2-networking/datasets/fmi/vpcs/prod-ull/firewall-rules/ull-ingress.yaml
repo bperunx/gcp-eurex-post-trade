@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../../../schemas/firewall-rules.schema.json
+
+ingress:
+  allow-ull-internal-udp-sbe:
+    description: "Allow low-latency SBE/UDP/Aeron traffic within the hot-path subnets."
+    priority: 1000
+    source_ranges:
+      - 10.65.0.0/20
+    rules:
+      - protocol: udp
+      - protocol: tcp
+  ingress-default-ull-deny:
+    description: "Deny unmatched ingress on low-latency VPC."
+    deny: true
+    priority: 65535

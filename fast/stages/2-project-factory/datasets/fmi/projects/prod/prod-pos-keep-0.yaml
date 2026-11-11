@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+# Component: components/position-keeping
+parent: $folder_ids:components/prod
+labels:
+  component: position-keeping
+  environment: production
+services:
+  - artifactregistry.googleapis.com
+  - bigquery.googleapis.com
+  - cloudtrace.googleapis.com
+  - compute.googleapis.com
+  - dataflow.googleapis.com
+  - pubsub.googleapis.com
+  - run.googleapis.com
+  - spanner.googleapis.com
+  - storage.googleapis.com
+shared_vpc_service_config:
+  host_project: $project_ids:net-prod-0
+service_encryption_key_ids:
+  bigquery.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/bigquery
+  compute.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/compute
+  dataflow.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/dataflow
+  pubsub.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/pubsub
+  run.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/run
+  spanner.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/spanner
+  storage.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/storage
+iam:
+  roles/owner:
+    - $iam_principals:service_accounts/prod/prod-pos-keep-0/automation/rw
+  roles/viewer:
+    - $iam_principals:service_accounts/prod/prod-pos-keep-0/automation/ro
+automation:
+  project: $project_ids:iac-0
+  service_accounts:
+    ro:
+      description: Read-only Terraform SA for position-keeping (prod).
+    rw:
+      description: Read-write Terraform SA for position-keeping (prod).

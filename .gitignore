@@ -12,12 +12,15 @@ data/raw/
 credentials*.json
 service-account*.json
 
-# Terraform
+# Terraform & FAST generated stage/project contracts
 .terraform/
+.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfvars.json
 !example.tfvars
+*-providers.tf
 
 # Python
 __pycache__/

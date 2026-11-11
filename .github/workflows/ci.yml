@@ -9,17 +9,77 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: Terraform
+  terraform-fmt:
+    name: Terraform Format
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 00_platform/terraform
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-      - name: Format
+        with:
+          terraform_version: ">= 1.12.2"
+      - name: Format check
         run: terraform fmt -check -recursive
+
+  fast-yaml-schemas:
+    name: FAST YAML Schema Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validators
+        run: pip install pyyaml jsonschema
+      - name: Validate FAST dataset YAMLs against JSON schemas
+        run: |
+          python3 - <<'EOF'
+          import json, pathlib, re, sys, yaml
+          import jsonschema
+
+          errors = 0
+          for yml in sorted(pathlib.Path("fast/stages").rglob("datasets/fmi/**/*.yaml")):
+              text = yml.read_text(encoding="utf-8")
+              m = re.search(r"#\s*yaml-language-server:\s*\$schema=(.+)", text)
+              data = yaml.safe_load(text)
+              if not m:
+                  continue
+              schema_path = (yml.parent / m.group(1).strip()).resolve()
+              schema = json.loads(schema_path.read_text(encoding="utf-8"))
+              try:
+                  jsonschema.validate(instance=data or {}, schema=schema)
+              except Exception as exc:
+                  print(f"FAIL {yml}: {exc.message}", file=sys.stderr)
+                  errors += 1
+          if errors:
+              sys.exit(1)
+          print("All FAST YAML dataset files passed schema validation.")
+          EOF
+
+  terraform-validate:
+    name: Terraform Validate (${{ matrix.root }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        root:
+          - fast/stages/0-org-setup
+          - fast/stages/1-vpcsc
+          - fast/stages/2-security
+          - fast/stages/2-networking
+          - fast/stages/2-project-factory
+          - components/data-foundation/_infra
+          - components/position-keeping/_infra
+          - components/tokenized-bond/_infra
+          - components/market-surveillance/_infra
+          - components/low-latency/_infra
+    defaults:
+      run:
+        working-directory: ${{ matrix.root }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ">= 1.12.2"
       - name: Init
         run: terraform init -backend=false -input=false
       - name: Validate

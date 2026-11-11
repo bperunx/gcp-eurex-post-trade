@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+# Component: components/low-latency (attached to dedicated ULL Shared VPC)
+parent: $folder_ids:components/prod
+labels:
+  component: low-latency
+  environment: production
+services:
+  - artifactregistry.googleapis.com
+  - compute.googleapis.com
+  - logging.googleapis.com
+  - monitoring.googleapis.com
+  - pubsub.googleapis.com
+  - storage.googleapis.com
+shared_vpc_service_config:
+  host_project: $project_ids:net-prod-ull-0
+service_encryption_key_ids:
+  compute.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/compute
+  pubsub.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/pubsub
+  storage.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/storage
+iam:
+  roles/owner:
+    - $iam_principals:service_accounts/prod/prod-low-lat-0/automation/rw
+  roles/viewer:
+    - $iam_principals:service_accounts/prod/prod-low-lat-0/automation/ro
+automation:
+  project: $project_ids:iac-0
+  service_accounts:
+    ro:
+      description: Read-only Terraform SA for low-latency (prod).
+    rw:
+      description: Read-write Terraform SA for low-latency (prod).

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../../../schemas/dns-response-policy-rules.schema.json
+
+project_id: $project_ids:net-prod-0
+networks:
+  - $networks:prod-shared
+  - $networks:prod-ull
+rules:
+  accounts:
+    dns_name: "accounts.google.com."
+    behavior: bypassResponsePolicy
+  googleapis-all:
+    dns_name: "*.googleapis.com."
+    local_data: { CNAME: { rrdatas: ["restricted.googleapis.com."] } }
+  googleapis-restricted:
+    dns_name: "restricted.googleapis.com."
+    local_data:
+      A:
+        rrdatas:
+          - 199.36.153.4
+          - 199.36.153.5
+          - 199.36.153.6
+          - 199.36.153.7
+  pkgdev-all:
+    dns_name: "*.pkg.dev."
+    local_data: { CNAME: { rrdatas: ["restricted.googleapis.com."] } }
+  run-all:
+    dns_name: "*.run.app."
+    local_data: { CNAME: { rrdatas: ["restricted.googleapis.com."] } }

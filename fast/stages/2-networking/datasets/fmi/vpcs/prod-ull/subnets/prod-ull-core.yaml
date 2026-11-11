@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../../../schemas/subnet.schema.json
+
+name: prod-ull-core
+region: $locations:primary
+ip_cidr_range: 10.65.2.0/24
+description: Core hot-path subnet for C3/C4 in-memory risk and order gateway (prod)

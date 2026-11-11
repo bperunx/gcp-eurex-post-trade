@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../../schemas/access-level.schema.json
+
+# EU geolocation and initial organization admin access
+conditions:
+  - members:
+      - user:info@perunx.io
+    regions:
+      - DE
+      - AT
+      - CH
+      - FR
+      - NL
+      - LU

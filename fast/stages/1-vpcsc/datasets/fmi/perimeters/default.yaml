@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=../../../schemas/perimeter.schema.json
+
+description: "FMI platform perimeter (starts in dry-run spec; promote to status once verified)"
+ignore_resource_changes: true
+use_explicit_dry_run_spec: true
+spec:
+  access_levels:
+    - $access_levels:eu_admins
+  resources:
+    - $resource_sets:discovered_projects
+  ingress_policies:
+    - $ingress_policies:fast-org-log-sinks
+  restricted_services:
+    - $service_sets:restricted_services

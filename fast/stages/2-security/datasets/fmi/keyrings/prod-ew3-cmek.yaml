@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../../schemas/keyring.schema.json
+
+# Centralized CMEK keyring in Frankfurt (ADR 0002) with 90-day key rotation
+location: $locations:primary
+project_id: $project_ids:prod-sec-core-0
+keys:
+  aiplatform:
+    rotation_period: 7776000s
+  bigquery:
+    rotation_period: 7776000s
+  bigtable:
+    rotation_period: 7776000s
+  compute:
+    rotation_period: 7776000s
+  dataflow:
+    rotation_period: 7776000s
+  pubsub:
+    rotation_period: 7776000s
+  run:
+    rotation_period: 7776000s
+  spanner:
+    rotation_period: 7776000s
+  storage:
+    rotation_period: 7776000s

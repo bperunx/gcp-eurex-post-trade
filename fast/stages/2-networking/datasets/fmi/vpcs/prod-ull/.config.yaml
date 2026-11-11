@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../../schemas/vpc.schema.json
+
+# Dedicated low-latency VPC with jumbo frames (MTU 8896) for gVNIC / Tier_1 / AF_XDP hot path
+project_id: $project_ids:net-prod-ull-0
+name: prod-ull-0
+delete_default_routes_on_create: true
+mtu: 8896
+nat_config:
+  nat-ull-ew3:
+    region: $locations:primary
+routes:
+  default:
+    dest_range: 0.0.0.0/0
+    next_hop_type: "gateway"
+    next_hop: "default-internet-gateway"

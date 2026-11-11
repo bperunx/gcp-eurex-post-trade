@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+# Component: components/data-foundation
+# Add projects/dev/dev-data-fnd-0.yaml later to introduce a dev environment.
+parent: $folder_ids:components/prod
+labels:
+  component: data-foundation
+  environment: production
+services:
+  - analyticshub.googleapis.com
+  - apigee.googleapis.com
+  - artifactregistry.googleapis.com
+  - biglake.googleapis.com
+  - bigquery.googleapis.com
+  - bigquerystorage.googleapis.com
+  - bigtable.googleapis.com
+  - bigtableadmin.googleapis.com
+  - compute.googleapis.com
+  - dataplex.googleapis.com
+  - pubsub.googleapis.com
+  - run.googleapis.com
+  - storage.googleapis.com
+shared_vpc_service_config:
+  host_project: $project_ids:net-prod-0
+service_encryption_key_ids:
+  bigquery.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/bigquery
+  bigtable.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/bigtable
+  compute.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/compute
+  pubsub.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/pubsub
+  run.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/run
+  storage.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/storage
+iam:
+  roles/owner:
+    - $iam_principals:service_accounts/prod/prod-data-fnd-0/automation/rw
+  roles/viewer:
+    - $iam_principals:service_accounts/prod/prod-data-fnd-0/automation/ro
+automation:
+  project: $project_ids:iac-0
+  service_accounts:
+    ro:
+      description: Read-only Terraform SA for data-foundation (prod).
+    rw:
+      description: Read-write Terraform SA for data-foundation (prod).

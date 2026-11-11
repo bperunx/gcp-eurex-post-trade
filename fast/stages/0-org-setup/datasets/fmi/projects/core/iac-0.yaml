@@ -1,0 +1,191 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+name: prod-iac-core-0
+services:
+  - accesscontextmanager.googleapis.com
+  - analyticshub.googleapis.com
+  - artifactregistry.googleapis.com
+  - bigquery.googleapis.com
+  - bigqueryreservation.googleapis.com
+  - bigquerystorage.googleapis.com
+  - bigtableadmin.googleapis.com
+  - billingbudgets.googleapis.com
+  - cloudasset.googleapis.com
+  - cloudbilling.googleapis.com
+  - cloudkms.googleapis.com
+  - cloudquotas.googleapis.com
+  - cloudresourcemanager.googleapis.com
+  - compute.googleapis.com
+  - container.googleapis.com
+  - dataflow.googleapis.com
+  - dns.googleapis.com
+  - essentialcontacts.googleapis.com
+  - iam.googleapis.com
+  - iamcredentials.googleapis.com
+  - logging.googleapis.com
+  - monitoring.googleapis.com
+  - networkconnectivity.googleapis.com
+  - networksecurity.googleapis.com
+  - orgpolicy.googleapis.com
+  - privateca.googleapis.com
+  - pubsub.googleapis.com
+  - run.googleapis.com
+  - secretmanager.googleapis.com
+  - servicenetworking.googleapis.com
+  - serviceusage.googleapis.com
+  - spanner.googleapis.com
+  - storage-component.googleapis.com
+  - storage.googleapis.com
+  - sts.googleapis.com
+
+iam:
+  $custom_roles:project_iam_viewer:
+    - $iam_principals:service_accounts/iac-0/iac-org-ro
+    - $iam_principals:service_accounts/iac-0/iac-pf-ro
+  roles/viewer:
+    - $iam_principals:service_accounts/iac-0/iac-org-ro
+  roles/owner:
+    - $iam_principals:service_accounts/iac-0/iac-org-rw
+
+iam_bindings:
+  sa_delegated_grants:
+    role: roles/resourcemanager.projectIamAdmin
+    members:
+      - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    condition:
+      title: Automation service accounts delegated grants
+      expression: |
+        api.getAttribute('iam.googleapis.com/modifiedGrantsByRole', []).hasOnly([
+          'roles/iam.serviceAccountAdmin',
+          'roles/iam.serviceAccountTokenCreator',
+          'roles/iam.workloadIdentityPoolAdmin'
+        ])
+  storage_delegated_grants:
+    role: roles/storage.admin
+    members:
+      - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    condition:
+      title: Project factory state bucket delegated grants
+      expression: |
+        resource.name.startsWith("projects/_/buckets/${prefix}-prod-iac-core-0-iac-shared-")
+
+buckets:
+  # Isolated Terraform state bucket for 0-org-setup
+  iac-org-state:
+    versioning: true
+    iam:
+      roles/storage.objectAdmin:
+        - $iam_principals:service_accounts/iac-0/iac-org-rw
+      $custom_roles:storage_viewer:
+        - $iam_principals:service_accounts/iac-0/iac-org-ro
+
+  # Isolated Terraform state bucket for FAST Stages 1 and 2 (per-stage managed folders)
+  iac-stage-state:
+    versioning: true
+    managed_folders:
+      1-vpcsc:
+        iam:
+          roles/storage.admin:
+            - $iam_principals:service_accounts/iac-0/iac-vpcsc-rw
+          $custom_roles:storage_viewer:
+            - $iam_principals:service_accounts/iac-0/iac-vpcsc-ro
+      2-networking:
+        iam:
+          roles/storage.admin:
+            - $iam_principals:service_accounts/iac-0/iac-networking-rw
+          $custom_roles:storage_viewer:
+            - $iam_principals:service_accounts/iac-0/iac-networking-ro
+      2-security:
+        iam:
+          roles/storage.admin:
+            - $iam_principals:service_accounts/iac-0/iac-security-rw
+          $custom_roles:storage_viewer:
+            - $iam_principals:service_accounts/iac-0/iac-security-ro
+      2-project-factory:
+        iam:
+          roles/storage.admin:
+            - $iam_principals:service_accounts/iac-0/iac-pf-rw
+          $custom_roles:storage_viewer:
+            - $iam_principals:service_accounts/iac-0/iac-pf-ro
+
+  # Shared state bucket for Stage-3 component _infra states (isolated per component via managed folders)
+  iac-shared-state:
+    versioning: true
+    iam:
+      roles/storage.admin:
+        - $iam_principals:service_accounts/iac-0/iac-pf-rw
+      $custom_roles:storage_viewer:
+        - $iam_principals:service_accounts/iac-0/iac-pf-ro
+
+  # Outputs bucket for FAST stages
+  iac-outputs:
+    versioning: true
+    iam:
+      roles/storage.admin:
+        - $iam_principals:service_accounts/iac-0/iac-org-rw
+        - $iam_principals:service_accounts/iac-0/iac-networking-rw
+        - $iam_principals:service_accounts/iac-0/iac-security-rw
+        - $iam_principals:service_accounts/iac-0/iac-pf-rw
+        - $iam_principals:service_accounts/iac-0/iac-vpcsc-rw
+      $custom_roles:storage_viewer:
+        - $iam_principals:service_accounts/iac-0/iac-org-ro
+        - $iam_principals:service_accounts/iac-0/iac-networking-ro
+        - $iam_principals:service_accounts/iac-0/iac-security-ro
+        - $iam_principals:service_accounts/iac-0/iac-pf-ro
+        - $iam_principals:service_accounts/iac-0/iac-vpcsc-ro
+        - $iam_principals:service_accounts/iac-0/iac-org-cicd-rw
+        - $iam_principals:service_accounts/iac-0/iac-org-cicd-ro
+
+  # Outputs bucket for per-component Stage-3 providers & tfvars generated by 2-project-factory
+  iac-shared-outputs:
+    versioning: true
+    iam:
+      roles/storage.admin:
+        - $iam_principals:service_accounts/iac-0/iac-pf-rw
+      $custom_roles:storage_viewer:
+        - $iam_principals:service_accounts/iac-0/iac-pf-ro
+
+service_accounts:
+  iac-org-ro:
+    display_name: IaC service account for org setup (read-only).
+  iac-org-rw:
+    display_name: IaC service account for org setup (read-write).
+  iac-org-cicd-ro:
+    display_name: IaC service account for org setup CI/CD (read-only).
+    iam_sa_roles:
+      $service_account_ids:iac-0/iac-org-ro:
+        - roles/iam.workloadIdentityUser
+        - roles/iam.serviceAccountTokenCreator
+  iac-org-cicd-rw:
+    display_name: IaC service account for org setup CI/CD (read-write).
+    iam_sa_roles:
+      $service_account_ids:iac-0/iac-org-rw:
+        - roles/iam.workloadIdentityUser
+        - roles/iam.serviceAccountTokenCreator
+  iac-vpcsc-ro:
+    display_name: IaC service account for VPC service controls (read-only).
+  iac-vpcsc-rw:
+    display_name: IaC service account for VPC service controls (read-write).
+  iac-networking-ro:
+    display_name: IaC service account for networking (read-only).
+  iac-networking-rw:
+    display_name: IaC service account for networking (read-write).
+  iac-security-ro:
+    display_name: IaC service account for security (read-only).
+  iac-security-rw:
+    display_name: IaC service account for security (read-write).
+  iac-pf-ro:
+    display_name: IaC service account for project factory (read-only).
+  iac-pf-rw:
+    display_name: IaC service account for project factory (read-write).
+
+workload_identity_pools:
+  default:
+    display_name: GitHub Actions CI/CD pool
+    providers:
+      github-default:
+        display_name: GitHub (bperunx)
+        attribute_condition: attribute.repository_owner=="bperunx"
+        identity_provider:
+          oidc:
+            template: github

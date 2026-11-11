@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../../../schemas/folder.schema.json
+
+name: Production
+parent: $folder_ids:components
+tag_bindings:
+  environment: $tag_values:environment/production

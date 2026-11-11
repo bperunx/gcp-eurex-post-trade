@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../schemas/project.schema.json
+
+# Dedicated Shared VPC host project for the low-latency hot path (single-market isolation).
+name: prod-net-ull-0
+parent: $folder_ids:networking/prod
+services:
+  - compute.googleapis.com
+  - dns.googleapis.com
+  - iap.googleapis.com
+  - logging.googleapis.com
+  - monitoring.googleapis.com
+  - networkmanagement.googleapis.com
+  - networksecurity.googleapis.com
+shared_vpc_host_config:
+  enabled: true

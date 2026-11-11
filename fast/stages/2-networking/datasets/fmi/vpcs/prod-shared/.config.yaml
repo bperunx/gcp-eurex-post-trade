@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../../../schemas/vpc.schema.json
+
+project_id: $project_ids:net-prod-0
+name: prod-shared-0
+delete_default_routes_on_create: true
+mtu: 1500
+nat_config:
+  nat-ew3:
+    region: $locations:primary
+psa_configs:
+  - ranges:
+      psa-managed-services: 10.64.224.0/20
+    export_routes: true
+    import_routes: true
+routes:
+  default:
+    dest_range: 0.0.0.0/0
+    next_hop_type: "gateway"
+    next_hop: "default-internet-gateway"

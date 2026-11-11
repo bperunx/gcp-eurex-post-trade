@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../../../schemas/subnet.schema.json
+
+name: prod-tok-bond
+region: $locations:primary
+ip_cidr_range: 10.64.8.0/22
+description: Frankfurt subnet for tokenized-bond integration (prod)

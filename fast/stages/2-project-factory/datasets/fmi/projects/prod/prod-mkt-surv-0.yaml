@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../../schemas/project.schema.json
+
+# Component: components/market-surveillance
+parent: $folder_ids:components/prod
+labels:
+  component: market-surveillance
+  environment: production
+services:
+  - aiplatform.googleapis.com
+  - artifactregistry.googleapis.com
+  - bigquery.googleapis.com
+  - compute.googleapis.com
+  - discoveryengine.googleapis.com
+  - pubsub.googleapis.com
+  - run.googleapis.com
+  - storage.googleapis.com
+  - vectorsearch.googleapis.com
+shared_vpc_service_config:
+  host_project: $project_ids:net-prod-0
+service_encryption_key_ids:
+  aiplatform.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/aiplatform
+  bigquery.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/bigquery
+  compute.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/compute
+  pubsub.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/pubsub
+  run.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/run
+  storage.googleapis.com:
+    - $kms_keys:prod-ew3-cmek/storage
+iam:
+  roles/owner:
+    - $iam_principals:service_accounts/prod/prod-mkt-surv-0/automation/rw
+  roles/viewer:
+    - $iam_principals:service_accounts/prod/prod-mkt-surv-0/automation/ro
+automation:
+  project: $project_ids:iac-0
+  service_accounts:
+    ro:
+      description: Read-only Terraform SA for market-surveillance (prod).
+    rw:
+      description: Read-write Terraform SA for market-surveillance (prod).
