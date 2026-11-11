@@ -21,6 +21,8 @@ service-account*.json
 *.tfvars.json
 !example.tfvars
 *-providers.tf
+tfplan
+*.tfplan
 
 # Python
 __pycache__/

@@ -67,7 +67,7 @@ iam_bindings:
     condition:
       title: Project factory state bucket delegated grants
       expression: |
-        resource.name.startsWith("projects/_/buckets/${prefix}-prod-iac-core-0-iac-shared-")
+        resource.name.startsWith("projects/_/buckets/fmi0-prod-iac-core-0-iac-shared-")
 
 buckets:
   # Isolated Terraform state bucket for 0-org-setup
