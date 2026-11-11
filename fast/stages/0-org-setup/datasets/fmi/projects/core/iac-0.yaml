@@ -38,14 +38,41 @@ services:
   - storage.googleapis.com
   - sts.googleapis.com
 
-iam:
-  $custom_roles:project_iam_viewer:
-    - $iam_principals:service_accounts/iac-0/iac-org-ro
-    - $iam_principals:service_accounts/iac-0/iac-pf-ro
-  roles/viewer:
-    - $iam_principals:service_accounts/iac-0/iac-org-ro
-  roles/owner:
-    - $iam_principals:service_accounts/iac-0/iac-org-rw
+# Restored from upstream classic dataset: org admins must be able to impersonate
+# the IaC SAs, and stage SAs need serviceUsageConsumer on the IaC project.
+iam_by_principals:
+  $iam_principals:gcp-organization-admins:
+    - roles/iam.serviceAccountTokenCreator
+    - roles/iam.workloadIdentityPoolAdmin
+  $iam_principals:service_accounts/iac-0/iac-org-ro:
+    - roles/browser
+    - roles/iam.serviceAccountViewer
+    - roles/iam.workloadIdentityPoolViewer
+    - $custom_roles:project_iam_viewer
+    - $custom_roles:storage_viewer
+    - roles/viewer
+  $iam_principals:service_accounts/iac-0/iac-org-rw:
+    - roles/iam.serviceAccountAdmin
+    - roles/iam.workloadIdentityPoolAdmin
+    - roles/owner
+    - roles/storage.admin
+  $iam_principals:service_accounts/iac-0/iac-networking-rw:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-networking-ro:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-pf-rw:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-pf-ro:
+    - roles/serviceusage.serviceUsageConsumer
+    - $custom_roles:project_iam_viewer
+  $iam_principals:service_accounts/iac-0/iac-security-rw:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-security-ro:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-rw:
+    - roles/serviceusage.serviceUsageConsumer
+  $iam_principals:service_accounts/iac-0/iac-vpcsc-ro:
+    - roles/serviceusage.serviceUsageConsumer
 
 iam_bindings:
   sa_delegated_grants:
