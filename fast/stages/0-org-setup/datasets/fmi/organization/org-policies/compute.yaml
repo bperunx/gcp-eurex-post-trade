@@ -25,6 +25,14 @@ compute.requireOsLogin:
   rules:
     - enforce: true
 
+# Default to internal load balancers only; add a project-level override on
+# net-prod-0 if Apigee later exposes an external HTTPS LB.
+compute.restrictLoadBalancerCreationForTypes:
+  rules:
+    - allow:
+        values:
+          - "in:INTERNAL"
+
 compute.restrictProtocolForwardingCreationForTypes:
   rules:
     - allow:
@@ -38,6 +46,41 @@ compute.skipDefaultNetworkCreation:
 compute.setNewProjectDefaultToZonalDNSOnly:
   rules:
     - enforce: true
+
+# Upstream Google OS/service image projects plus Dataflow, Vertex AI & Dataplex.
+# Add "is:projects/fmi0-prod-low-lat-0" after Stage 2 if baking custom kernel images.
+compute.trustedImageProjects:
+  rules:
+    - allow:
+        values:
+          - "is:projects/centos-cloud"
+          - "is:projects/cos-cloud"
+          - "is:projects/debian-cloud"
+          - "is:projects/fedora-cloud"
+          - "is:projects/fedora-coreos-cloud"
+          - "is:projects/opensuse-cloud"
+          - "is:projects/rhel-cloud"
+          - "is:projects/rhel-sap-cloud"
+          - "is:projects/rocky-linux-cloud"
+          - "is:projects/suse-cloud"
+          - "is:projects/suse-sap-cloud"
+          - "is:projects/ubuntu-os-cloud"
+          - "is:projects/ubuntu-os-pro-cloud"
+          - "is:projects/windows-cloud"
+          - "is:projects/windows-sql-cloud"
+          - "is:projects/confidential-vm-images"
+          - "is:projects/confidential-space-images"
+          - "is:projects/backupdr-images"
+          - "is:projects/deeplearning-platform-release"
+          - "is:projects/serverless-vpc-access-images"
+          - "is:projects/gke-node-images"
+          - "is:projects/gke-windows-node-images"
+          - "is:projects/ubuntu-os-gke-cloud"
+          - "is:projects/rocky-linux-accelerator-cloud"
+          - "is:projects/ubuntu-os-accelerator-images"
+          - "is:projects/dataflow-service-producer-prod"
+          - "is:projects/ml-images"
+          - "is:projects/cloud-dataproc"
 
 compute.vmExternalIpAccess:
   rules:
