@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../../../schemas/ingress-policy.schema.json
+
+# FAST IaC service accounts (Terraform runs from Cloud Shell, local, or CI/CD).
+# Impersonation of these SAs is controlled via IAM in the iac-0 project.
+from:
+  access_levels:
+    - "*"
+  identities:
+    - $iam_principals:service_accounts/iac-0/iac-org-rw
+    - $iam_principals:service_accounts/iac-0/iac-org-ro
+    - $iam_principals:service_accounts/iac-0/iac-org-cicd-rw
+    - $iam_principals:service_accounts/iac-0/iac-org-cicd-ro
+    - $iam_principals:service_accounts/iac-0/iac-vpcsc-rw
+    - $iam_principals:service_accounts/iac-0/iac-vpcsc-ro
+    - $iam_principals:service_accounts/iac-0/iac-networking-rw
+    - $iam_principals:service_accounts/iac-0/iac-networking-ro
+    - $iam_principals:service_accounts/iac-0/iac-security-rw
+    - $iam_principals:service_accounts/iac-0/iac-security-ro
+    - $iam_principals:service_accounts/iac-0/iac-pf-rw
+    - $iam_principals:service_accounts/iac-0/iac-pf-ro
+to:
+  operations:
+    - service_name: "*"
+  resources:
+    - "*"
